@@ -18,8 +18,15 @@ const BuildControls = (props) => {
     );
     return (
         <div className={styles.BuildControls}>
-            <p className={styles.Price}>Current Price: {props.price}</p>
+            <p className={styles.Price}>Current Price: {props.price} $</p>
             {controls}
+            <button 
+                onClick={props.ordered}
+                className={styles.OrderButton}
+                disabled={!props.purchasable}
+            >
+                ORDER NOW
+            </button>
         </div>
     );
 };
