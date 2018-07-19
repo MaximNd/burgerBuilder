@@ -4,6 +4,7 @@ import styles from './Toolbar.css';
 import Logo from './../../../Logo/Logo';
 import NavigationItems from './../NavigationItems/NavigationItems';
 import DrawerToggle from './../DrawerToggle/DrawerToggle';
+import PropTypes from 'prop-types';
 
 const Toolbar = (props) => {
     return (
@@ -17,6 +18,10 @@ const Toolbar = (props) => {
             </nav>
         </header>
     );
+};
+
+Toolbar.propTypes = {
+    openedSideDrawler: PropTypes.func.isRequired
 };
 
 export default Toolbar;

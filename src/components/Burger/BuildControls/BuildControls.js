@@ -2,6 +2,7 @@ import React from 'react';
 
 import styles from './BuildControls.css';
 import BuildControl from './BuildControl/BuildControl';
+import PropTypes from 'prop-types';
 
 const BuildControls = (props) => {
     const controls = [
@@ -29,6 +30,15 @@ const BuildControls = (props) => {
             </button>
         </div>
     );
+};
+
+BuildControls.propTypes = {
+    price: PropTypes.number.isRequired,
+    ingredientAdded: PropTypes.func.isRequired,
+    ingredientDeleted: PropTypes.func.isRequired,
+    disabledInfo: PropTypes.object.isRequired,
+    purchasable: PropTypes.bool.isRequired,
+    ordered: PropTypes.func.isRequired
 };
 
 export default BuildControls;
