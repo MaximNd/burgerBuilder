@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from './../../../axios-orders';
 import { withRouter } from 'react-router-dom';
 
@@ -21,7 +22,7 @@ class ContactData extends Component {
     orderHandler = event => {
         event.preventDefault();
         const order = {
-            ingedients: this.props.ingredients,
+            ingredients: this.props.ingredients,
             price: this.props.price,
             customer: {
                 name: 'Max',
@@ -65,5 +66,10 @@ class ContactData extends Component {
         );
     }
 }
+
+ContactData.propTypes = {
+    ingredients: PropTypes.object.isRequired,
+    price: PropTypes.number.isRequired
+};
 
 export default withRouter(ContactData);
