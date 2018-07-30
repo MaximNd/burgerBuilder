@@ -12,11 +12,6 @@
     transition: transform 0.3s ease-out;
 }
 
-.SideDrawer .Logo {
-    height: 10%;
-    margin: 32px;
-}
-
 @media (min-width: 500px) {
     .SideDrawer {
         display: none;
