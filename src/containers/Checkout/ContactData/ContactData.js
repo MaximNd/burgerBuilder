@@ -6,16 +6,96 @@ import { withRouter } from 'react-router-dom';
 import styles from './ContactData.css';
 import Button from './../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
+import Input from './../../../components/UI/Input/Input';
 
 class ContactData extends Component {
 
     state = {
-        name: '',
-        email: '',
-        address: {
-            street: '',
-            postalCode: ''
+        orderForm: {
+            name: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Name'
+                },
+                value: '',
+                validation: {
+                    rules: {
+                        required: true,
+                        minLength: 1,
+                        maxLength: 15
+                    },
+                    valid: false
+                },
+                touched: false
+            },
+            street: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Street'
+                },
+                value: '',
+                validation: {
+                    rules: {
+                        required: true,
+                        maxLength: 20
+                    },
+                    valid: false
+                },
+                touched: false
+            },
+            country: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Country'
+                },
+                value: '',
+                validation: {
+                    rules: {
+                        required: true,
+                        maxLength: 20
+                    },
+                    valid: false
+                },
+                touched: false
+            },
+            email: {
+                elementType: 'input',
+                elementConfig: {
+                    type: 'text',
+                    placeholder: 'Your Email'
+                },
+                value: '',
+                validation: {
+                    rules: {
+                        required: true,
+                        email: true
+                    },
+                    valid: false
+                },
+                touched: false
+            },
+            deliveryMethod: {
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        {value: 'fastest', text: 'Fastest'},
+                        {value: 'cheapest', text: 'Cheapest'},
+                    ]
+                },
+                value: 'fastest',
+                validation: {
+                    rules: {
+                        required: true
+                    },
+                    valid: false
+                },
+                touched: false
+            }
         },
+        formIsValid: false,
         loading: false
     }
 
@@ -25,14 +105,14 @@ class ContactData extends Component {
             ingredients: this.props.ingredients,
             price: this.props.price,
             customer: {
-                name: 'Max',
+                name: this.state.orderForm.name.value,
                 address: {
-                    street: 'Street 1',
-                    country: 'Ukraine'
+                    street: this.state.orderForm.street.value,
+                    country: this.state.orderForm.country.value
                 },
-                email: 'email@mail.com'
+                email: this.state.orderForm.email.value
             },
-            deliveryMethod: 'fastest'
+            deliveryMethod: this.state.orderForm.deliveryMethod.value
         };
         this.setState({ loading: true });
         axios.post('/orders.json', order)
@@ -47,14 +127,63 @@ class ContactData extends Component {
             });
     }
 
+    checkValidity(value, rules) {
+        let isValid = true;
+        
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
+        }
+        if (rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid;
+        }
+        if (rules.length) {
+            isValid = value.length === rules.length && isValid;
+        }
+        if (rules.email) {
+            const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+            isValid = emailRegex.test(value) && isValid;
+        }
+        return isValid;
+    }
+
+    inputChangedHandler = (event, inputID) => {
+        const newOrderForm = { ...this.state.orderForm };
+        const newFormEl = { ...newOrderForm[inputID] };
+        newFormEl.value = event.target.value;
+        newFormEl.validation.valid = this.checkValidity(newFormEl.value, newFormEl.validation.rules)
+        newFormEl.touched = true;
+        let formIsValid = true;
+        for (let key in newOrderForm) {
+            formIsValid = newOrderForm[key].validation.valid && formIsValid;
+        }
+        newOrderForm[inputID] = newFormEl
+        this.setState({ orderForm: newOrderForm, formIsValid });
+    }
+
+
+
     render() {
-        let form = (<form>
-                        <input className={styles.Input} type="text" placeholder="Your name"/>
-                        <input className={styles.Input} type="text" placeholder="Your email"/>
-                        <input className={styles.Input} type="text" placeholder="Your street"/>
-                        <input className={styles.Input} type="text" placeholder="Your postalCode"/>
-                        <Button btnType="Success" clicked={this.orderHandler}>ORDER</Button>
-                    </form>);
+        let inputs = [];
+        let form = null;
+
+        for (let key in this.state.orderForm) {
+            inputs.push(<Input 
+                        key={key}
+                        elementType={this.state.orderForm[key].elementType} 
+                        elementConfig={this.state.orderForm[key].elementConfig} 
+                        value={this.state.orderForm[key].value} 
+                        invalid={!this.state.orderForm[key].validation.valid} 
+                        touched={this.state.orderForm[key].touched} 
+                        changed={event => this.inputChangedHandler(event, key)} />);
+        }
+
+        form = (<form>
+                    {inputs}
+                    <Button disabled={!this.state.formIsValid} btnType="Success" clicked={this.orderHandler}>ORDER</Button>
+                </form>);
         if (this.state.loading) {
             form = <Spinner />;
         }

@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 const Button = (props) => {
     return (
         <button
+            disabled={props.disabled}
             onClick={props.clicked}
             className={`${styles.Button} ${styles[props.btnType]}`} >
             {props.children}
@@ -15,7 +16,8 @@ const Button = (props) => {
 
 Button.propTypes = {
     clicked: PropTypes.func,
-    btnType: PropTypes.oneOf(['Success', 'Error'])
+    btnType: PropTypes.oneOf(['Success', 'Error']),
+    disabled: PropTypes.bool
 };
 
 export default Button;
