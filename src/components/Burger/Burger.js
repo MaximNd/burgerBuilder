@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 
 const Burger = (props) => {
     let ingredients = Object.keys(props.ingredients)
-        .map(ingredient => 
+        .map(ingredient =>
             [...Array(props.ingredients[ingredient])]
             .map((_, index) => <BurgerIngredient key={ingredient + index} type={ingredient} /> )
         )
