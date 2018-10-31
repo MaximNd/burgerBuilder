@@ -36,11 +36,7 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
-        // axios.get('/ingredients.json')
-        //     .then(({data}) => {
-        //         this.setState({ ingredients: data });
-        //     })
-        //     .catch(console.log);
+        this.props.onInitIngredients();
     }
 
     render() {
@@ -59,7 +55,7 @@ class BurgerBuilder extends Component {
                             ingedients={this.props.ingredients}
                             purchaseCancelled={this.purchaseCancelHandler}
                             purchaseContinued={this.purchaseContinueHandler} />;
-                
+
             burger = (
                 <React.Fragment>
                     <Burger ingredients={this.props.ingredients} />
@@ -99,6 +95,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
     onIngredientAdded: (ingredient) => dispatch(burgerBuilderActions.addIngredient(ingredient)),
     onIngredientRemoved: (ingredient) => dispatch(burgerBuilderActions.removeIngredient(ingredient)),
 });
