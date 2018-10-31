@@ -203,8 +203,8 @@ ContactData.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    ingredients: state.ingredients,
-    price: state.totalPrice
+    ingredients: state.burgerBuilder.ingredients,
+    price: state.burgerBuilder.totalPrice
 });
 
 export default connect(mapStateToProps)(withRouter(ContactData));
